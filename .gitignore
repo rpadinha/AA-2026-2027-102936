@@ -1,0 +1,23 @@
+# Byte-compiled / optimized / DLL files
+pycache__/
+*.pyc
+*.pyo
+*.pyd
+.Python
+# Virtual environments
+venv/
+env/
+ENV/
+.venv
+# Jupyter Notebook checkpoints & cache
+.ipynb_checkpoints
+*/.ipynb_checkpoints
+# Operating System files
+.DS_Store
+Thumbs.db
+# Large raw benchmark data dumps
+# data/graphs/synthetic/*.graphml
+# IDE and Editor configurations
+.vscode/
+.idea/
+*.swp
