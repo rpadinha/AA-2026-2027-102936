@@ -6,12 +6,12 @@ Welcome to your **Advanced Algorithms** project repository! This repository serv
 
 ## 1. Student & Project Identification
 
-* **Student Name:** [Your Full Name]
-* **Student ID / Seed:** [Your Student Number, e.g., 12345]
-* **Course:** M.Sc. in [Informatics Engineering / Computational Engineering / Data Science / Applied Mathematics]
-* **Assigned Problem ID & Name:** [e.g., P02 - Hamiltonian Cycle Decision]
-* **Problem Type:** [Optimization / Decision]
-* **Graph Type:** [Undirected (`nx.Graph`) / Directed (`nx.DiGraph`)]
+* **Student Name:** Rui Alexandre Oliveira Padinha
+* **Student ID / Seed:** 102936
+* **Course:** M.Sc. in Computational Engineering
+* **Assigned Problem ID & Name:** P25 - Min Weight Dominating Set
+* **Problem Type:** Optimization
+* **Graph Type:** Undirected Graph
 
 ---
 
