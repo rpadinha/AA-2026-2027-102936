@@ -15,8 +15,9 @@ N_VALUES = range(17, 41)
 M_VALUES = [0.125, 0.250, 0.500, 0.750]
 
 ### -------------- handmade graphs ---------------
-HANDMADE_1 = nx.Graph() # 4 verticies, 4 edges graph
-HANDMADE_7 = nx.Graph() # 7 verticies, 12 edges graph
+HANDMADE_1 = nx.Graph()  # 4  vertices, 4 edges graph
+HANDMADE_7 = nx.Graph()  # 7  vertices, 12 edges graph
+HANDMADE_12 = nx.Graph() # 12 vertices, 15 edges graph
 
 HANDMADE_1.add_nodes_from([
     (1, {"weight": 3}),
@@ -56,9 +57,43 @@ HANDMADE_7.add_edges_from([
     (7, 2)
 ])
 
+HANDMADE_12.add_nodes_from([
+    (1, {"weight" :  5}),
+    (2, {"weight" :  7}),
+    (3, {"weight" :  9}),
+    (4, {"weight" :  4}),
+    (5, {"weight" :  3}),
+    (6, {"weight" :  12}),
+    (7, {"weight" :  6}),
+    (8, {"weight" :  7}),
+    (9, {"weight" :  1}),
+    (10, {"weight" : 2}),
+    (11, {"weight" : 10}),
+    (12, {"weight" : 8}),
+])
+
+HANDMADE_12.add_edges_from([
+    (1, 10),
+    (1, 2),
+    (2, 3),
+    (2, 9),
+    (3, 4),
+    (3, 5),
+    (3, 9),
+    (5, 6),
+    (6, 7),
+    (7, 12),
+    (7, 8),
+    (8, 9),
+    (9, 10),
+    (9, 11),
+    (11, 12)
+])
+
 HANDMADE_GRAPHS = {
     "graph_4_4" : HANDMADE_1,
-    "graph_7_12" : HANDMADE_7
+    "graph_7_12" : HANDMADE_7,
+    "graph_12_15" : HANDMADE_12
 }
 
 def generate_handmade_graphs(handmadeGraphs) -> list[str]:

@@ -17,7 +17,7 @@ def exhaustive_search(G : nx.Graph) -> dict:
     basic_ops = 0
 
     # uses the src/problem.py helper functions
-    if not validate_graph(G): # this doesnt account into basic_ops i believe
+    if not validate_graph(G): # this doesnt account into basic_ops 
         raise ValueError("Invalid graph")
     
     # number of nodes of graph

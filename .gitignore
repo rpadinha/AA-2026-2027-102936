@@ -22,3 +22,5 @@ data/graphs/synthetic/*.graphml
 .vscode/
 .idea/
 *.swp
+# research docs for me
+/docs/research/*.pdf
