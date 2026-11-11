@@ -1,53 +1,54 @@
-def validate_graph(graph, weights):
+import networkx as nx
+
+def validate_graph(G : nx.Graph) -> bool:
     """ Validate graph structure and weights"""
 
-    if set(graph.keys()) != set(weights.keys()):
+    if not isinstance(G, nx.Graph):
         return False
 
-    for v in graph:
+    # check all nodes have positive weight
+    for v in G.nodes():
 
-        if weights[v] <= 0:
+        if "weight" not in G.nodes()[v]:
             return False
-        for u in graph[v]:
+        
+        if G.nodes[v]["weight"] <= 0:
+            return False
 
-            if u not in graph:
-                return False
-
-            if u == v:
-                return False
-
-            if v not in graph[u]:
-                return False
-            
+        # check for self-loops
+        if G.has_edge(v, v):
+            return False
+        
     return True
 
-def is_dominating_set(graph, D):
+def is_dominating_set(G : nx.Graph, D) -> bool:
     """ Check whether D is a dominating set. """
 
     D = set(D)
 
-    if not D.issubset(set(graph.keys())):
+    # check that all vertices in D belong to G
+    if not D.issubset(set(G.nodes())):
         return False
 
-    for v in graph:
+    for v in G.nodes():
 
         if v in D:
             continue
 
-        if not graph[v].intersection(D):
+        if not set(G.neighbors(v)).intersection(D):
             return False
 
     return True
 
-def solution_weight(weights, D):
+def solution_weight(G : nx.Graph, D) -> int:
     """ Calculate total weight of a solution. """
 
-    return sum(weights[v] for v in D)
+    return sum(G.nodes[v]["weight"] for v in D)
 
-def evaluate_solution(graph, weights, D):
+def evaluate_solution(G : nx.Graph, D) -> int:
     """ Evaluate a candidate solution. """
 
-    if not is_dominating_set(graph, D):
+    if not is_dominating_set(G, D):
         return None
 
-    return solution_weight(weights, D)
+    return solution_weight(G, D)
