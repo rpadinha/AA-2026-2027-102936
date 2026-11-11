@@ -35,7 +35,7 @@ def save_results(results):
         writer = csv.DictWriter(file, fieldnames=CSV_HEADERS)
 
         # write the header if it doesnt exist
-        if not file_exists or RESULTS_FILE.stat().st_size()== 0:
+        if not file_exists or RESULTS_FILE.stat().st_size == 0:
             writer.writeheader()
 
         writer.writerows(results)
@@ -69,7 +69,7 @@ def benchmark_graph(G, filename, student_id):
         if exhaustive_result["timed_out"]
         else "SUCCESS"
     )
-    
+
     # greedy search for G
     start_time = time.perf_counter()
     greedy_result = greedy_search(G)
@@ -132,7 +132,13 @@ def benchmark_graph(G, filename, student_id):
 def run_benchmarks(student_id):
     """ Main function to call benchmark graph for all graphs in synthetic folder. """
 
-    graph_files = sorted(GRAPH_DIR.glob("graph_*.graphml"))
+    graph_files = sorted(
+    GRAPH_DIR.glob("graph_*.graphml"),
+    key=lambda p: (
+        int(p.stem.split("_")[1]), 
+        int(p.stem.split("_")[2])
+        )
+    )
 
     if not graph_files:
         raise FileNotFoundError(f"No synthetic graphs found in {GRAPH_DIR}. \n Generate them first using:\n python -m src.utils --seed 12345\n")

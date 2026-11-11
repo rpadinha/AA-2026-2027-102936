@@ -18,6 +18,7 @@ Thumbs.db
 # Large raw benchmark data dumps
 data/graphs/handmade/*.graphml
 data/graphs/synthetic/*.graphml
+data/*.csv
 # IDE and Editor configurations
 .vscode/
 .idea/

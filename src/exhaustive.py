@@ -1,7 +1,8 @@
+import time
 import networkx as nx
 from src.problem import validate_graph, is_dominating_set, solution_weight
 
-def exhaustive_search(G : nx.Graph) -> dict:
+def exhaustive_search(G : nx.Graph, time_limit_sec=None) -> dict:
     """ 
         Exhaustive search for a dominating set
         Returns a dictionary with 4 values: 
@@ -27,7 +28,20 @@ def exhaustive_search(G : nx.Graph) -> dict:
     # Generate all possible subsets using binary representation (2^n)
     max_sets = 2 ** n
 
+    start_time = time.perf_counter()
+    timed_out = False
+
     for mask in range(1 , max_sets):
+
+        # Calling time.perf_counter() makes a C-level system call to your CPU timer on every single iteration.
+        # When N = 20, that is 1048575 system calls. System call overhead will slow down your loop by 3x to 10x
+        # Instead using another bitwise mask to check the clock periodically in this case we will be checking every 8192 iterations -> 0x1FFF
+        if time_limit_sec is not None and (mask & 0x1FFF) == 0:
+
+            if time.perf_counter() - start_time >= time_limit_sec:
+                timed_out = True
+                break
+
         tested_configs += 1
 
         D = set()
@@ -57,5 +71,6 @@ def exhaustive_search(G : nx.Graph) -> dict:
         "dominating_set" : best_set,
         "solution_quality" : min_cost,
         "tested_configs" : tested_configs,
-        "basic_ops" : basic_ops
+        "basic_ops" : basic_ops,
+        "timed_out" : timed_out
     }
