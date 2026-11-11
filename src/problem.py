@@ -21,34 +21,31 @@ def validate_graph(G : nx.Graph) -> bool:
         
     return True
 
-def is_dominating_set(G : nx.Graph, D) -> bool:
-    """ Check whether D is a dominating set. """
-
-    D = set(D)
+def is_dominating_set(G : nx.Graph, D : set) -> tuple[bool, int]:
+    """ Check whether D is a dominating set. Returns (is_valid, basic_ops)"""
+    ops = 0
 
     # check that all vertices in D belong to G
     if not D.issubset(set(G.nodes())):
-        return False
+        return False, ops
 
     for v in G.nodes():
-
+        ops += 1
         if v in D:
             continue
 
+        ops += 1 # counting the neighborhood intersection check
         if not set(G.neighbors(v)).intersection(D):
-            return False
+            return False, ops
 
-    return True
+    return True, ops
 
-def solution_weight(G : nx.Graph, D) -> int:
-    """ Calculate total weight of a solution. """
+def solution_weight(G : nx.Graph, D : set) -> tuple[int, int]:
+    """ Calculate total weight of a solution. Returns (cost, basic_ops)"""
+    ops = 0
+    cost = 0
+    for v in D:
+        ops += 1
+        cost += G.nodes[v]["weight"]
 
-    return sum(G.nodes[v]["weight"] for v in D)
-
-def evaluate_solution(G : nx.Graph, D) -> int:
-    """ Evaluate a candidate solution. """
-
-    if not is_dominating_set(G, D):
-        return None
-
-    return solution_weight(G, D)
+    return cost, ops 

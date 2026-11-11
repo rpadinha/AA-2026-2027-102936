@@ -14,7 +14,7 @@ SAVE_DIR_SYNTHETIC = BASE_DIR / "data" / "graphs" / "synthetic"
 N_VALUES = range(17, 41)
 M_VALUES = [0.125, 0.250, 0.500, 0.750]
 
-### --------- handmade graphs goes here? ---------- 
+### -------------- handmade graphs ---------------
 HANDMADE_1 = nx.Graph() # 4 verticies, 4 edges graph
 HANDMADE_7 = nx.Graph() # 7 verticies, 12 edges graph
 
