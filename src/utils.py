@@ -11,7 +11,7 @@ BASE_DIR = Path(__file__).parent.parent
 SAVE_DIR_HANDMADE = BASE_DIR / "data" / "graphs" / "handmade"
 SAVE_DIR_SYNTHETIC = BASE_DIR / "data" / "graphs" / "synthetic"
 
-N_VALUES = range(17, 41)
+N_VALUES = range(4, 20)
 M_VALUES = [0.125, 0.250, 0.500, 0.750]
 
 ### -------------- handmade graphs ---------------

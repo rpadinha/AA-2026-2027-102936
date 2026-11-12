@@ -5,7 +5,7 @@ from pathlib import Path
 
 from src.graph_io import load_graph
 from src.exhaustive import exhaustive_search
-from src.greedy import greedy_search
+from src.greedy import greedy_basic_search, greedy_ratio_search
 
 BASE_DIR = Path(__file__).parent.parent
 
@@ -46,7 +46,6 @@ def benchmark_graph(G, filename, student_id):
     Returns both results for exhaustive and greedy in a list.
     """
 
-
     # Extract graph information from filename
     parts = filename.replace(".graphml", "").split("_")
     n = int(parts[1])
@@ -72,7 +71,7 @@ def benchmark_graph(G, filename, student_id):
 
     # greedy search for G
     start_time = time.perf_counter()
-    greedy_result = greedy_search(G)
+    greedy_result = greedy_ratio_search(G)
     greedy_time = time.perf_counter() - start_time
 
     # optimal gap calculation
@@ -87,6 +86,7 @@ def benchmark_graph(G, filename, student_id):
         else:
             optimality_gap = 0.0
 
+    # append the exhaustive search result
     results.append({
         "student_id": student_id,
         "problem_id": PROBLEM_ID,
@@ -108,7 +108,8 @@ def benchmark_graph(G, filename, student_id):
         ),
         "status": exhaustive_status
     })
-    
+
+    # append the greedy search result
     results.append({
         "student_id": student_id,
         "problem_id": PROBLEM_ID,
@@ -116,7 +117,7 @@ def benchmark_graph(G, filename, student_id):
         "N": n,
         "density": density,
         "seed": seed,
-        "solver_type": "Greedy_Basic",
+        "solver_type": "Greedy_Ratio",
         "basic_ops": greedy_result["basic_ops"],
         "execution_time_sec": round(greedy_time, 6),
         "tested_configs": greedy_result["tested_configs"],

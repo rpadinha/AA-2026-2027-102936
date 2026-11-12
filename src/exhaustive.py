@@ -66,7 +66,8 @@ def exhaustive_search(G : nx.Graph, time_limit_sec=None) -> dict:
             if cost < min_cost: # if the cost is better we store the cost and the set
                 min_cost = cost
                 best_set = D
-
+            if timed_out:
+                cost = float('inf')
     return {
         "dominating_set" : best_set,
         "solution_quality" : min_cost,
