@@ -50,8 +50,8 @@ def greedy_basic_search(G: nx.Graph) -> dict:
 
             basic_ops += 1
 
-            # store the vertex with the lowest ratio
-            if newly_dominated > best_dominated:
+            # store the vertex  like algorithm 33 compares the span w(v) = |W(v)| . chapter 7 algorithm 33
+            if len(newly_dominated) > len(best_dominated):
                 best_vertex = v
                 best_dominated = newly_dominated
 
@@ -125,11 +125,13 @@ def greedy_ratio_search(G: nx.Graph) -> dict:
             if not newly_dominated:
                 continue
 
+            # ratio calculation mentioned in line 133, 134
             weight = G.nodes[v]["weight"]
             ratio = weight / len(newly_dominated)
             basic_ops += 1
 
-            # store the vertex with the lowest ratio
+            # store the vertex  kinda like algorithm 33 compares the ratio of cost / number of nodes discovered
+            #  w(v) = weight(v) / |W(v)| . chapter 7 algorithm 33 with a twist
             if ratio < best_ratio:
                 best_ratio = ratio
                 best_vertex = v
