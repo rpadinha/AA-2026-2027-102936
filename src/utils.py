@@ -123,7 +123,7 @@ def generate_random_graph(n, m) -> str:
             new_node = G.number_of_nodes()
             weight = random.randint(1, 100)
             pos[new_node] = (x, y)
-            G.add_node(new_node, weight=weight, pos=(x, y))
+            G.add_node(new_node, weight=weight, x=x, y=y)
 
     max_edges = (n * (n - 1)) // 2
     num_edges = int(max_edges * m)
