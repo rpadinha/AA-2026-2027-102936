@@ -67,8 +67,9 @@ def exhaustive_search(G : nx.Graph, time_limit_sec=None) -> dict:
                 min_cost = cost
                 best_set = D
 
-    if timed_out: # timed out we dont count the cost -> inf
-        cost = float('inf')
+    if timed_out: # timed out we dont count the min_cost -> inf
+        min_cost = float('inf')
+        best_set = None
     return {
         "dominating_set" : best_set,
         "solution_quality" : min_cost,

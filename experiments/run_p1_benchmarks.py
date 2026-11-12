@@ -42,17 +42,16 @@ def save_results(results):
 
 def benchmark_graph(G, filename, student_id):
     """ 
-    Benchmark exhaustive and greedy search on one graph. 
-    Returns both results for exhaustive and greedy in a list.
+    Benchmark exhaustive, greedy basic, and greedy ratio search on one graph. 
+    Returns all three results in a list.
     """
 
     # Extract graph information from filename
     parts = filename.replace(".graphml", "").split("_")
     n = int(parts[1])
-    density_percent = int(parts[2])
-    density = density_percent / 100
+    density = int(parts[2]) / 1000.0
     print(f"\nBenchmarking graph: {n} vertices with {density} edges")
-    seed = int(f"{student_id}{n}{density_percent}")
+    seed = student_id
 
     results = []
 
@@ -69,22 +68,31 @@ def benchmark_graph(G, filename, student_id):
         else "SUCCESS"
     )
 
-    # greedy search for G
+    # greedy basic search for G (unweighted span heuristic)
     start_time = time.perf_counter()
-    greedy_result = greedy_ratio_search(G)
-    greedy_time = time.perf_counter() - start_time
+    greedy_basic_result = greedy_basic_search(G)
+    greedy_basic_time = time.perf_counter() - start_time
 
-    # optimal gap calculation
-    optimality_gap = None
+    # greedy ratio search for G (cost/coverage heuristic)
+    start_time = time.perf_counter()
+    greedy_ratio_result = greedy_ratio_search(G)
+    greedy_ratio_time = time.perf_counter() - start_time
+
+    # optimal gap calculations for both greedy heuristics
+    basic_gap = None
+    ratio_gap = None
 
     if exhaustive_status == "SUCCESS":
         optimal_cost = exhaustive_result["solution_quality"]
-        greedy_cost = greedy_result["solution_quality"]
+        basic_cost = greedy_basic_result["solution_quality"]
+        ratio_cost = greedy_ratio_result["solution_quality"]
 
         if optimal_cost > 0:
-            optimality_gap = (abs(greedy_cost - optimal_cost) / optimal_cost) * 100
+            basic_gap = (abs(basic_cost - optimal_cost) / optimal_cost) * 100
+            ratio_gap = (abs(ratio_cost - optimal_cost) / optimal_cost) * 100
         else:
-            optimality_gap = 0.0
+            basic_gap = 0.0
+            ratio_gap = 0.0
 
     # append the exhaustive search result
     results.append({
@@ -109,7 +117,27 @@ def benchmark_graph(G, filename, student_id):
         "status": exhaustive_status
     })
 
-    # append the greedy search result
+    # append the greedy basic search result
+    results.append({
+        "student_id": student_id,
+        "problem_id": PROBLEM_ID,
+        "project_phase": PROJECT_PHASE,
+        "N": n,
+        "density": density,
+        "seed": seed,
+        "solver_type": "Greedy_Basic",
+        "basic_ops": greedy_basic_result["basic_ops"],
+        "execution_time_sec": round(greedy_basic_time, 6),
+        "tested_configs": greedy_basic_result["tested_configs"],
+        "solution_quality": greedy_basic_result["solution_quality"],
+        "optimality_gap_pct": (
+            round(basic_gap, 4)
+            if basic_gap is not None else ""
+        ),
+        "status": "SUCCESS"
+    })
+
+    # append the greedy ratio search result
     results.append({
         "student_id": student_id,
         "problem_id": PROBLEM_ID,
@@ -118,16 +146,17 @@ def benchmark_graph(G, filename, student_id):
         "density": density,
         "seed": seed,
         "solver_type": "Greedy_Ratio",
-        "basic_ops": greedy_result["basic_ops"],
-        "execution_time_sec": round(greedy_time, 6),
-        "tested_configs": greedy_result["tested_configs"],
-        "solution_quality": greedy_result["solution_quality"],
+        "basic_ops": greedy_ratio_result["basic_ops"],
+        "execution_time_sec": round(greedy_ratio_time, 6),
+        "tested_configs": greedy_ratio_result["tested_configs"],
+        "solution_quality": greedy_ratio_result["solution_quality"],
         "optimality_gap_pct": (
-            round(optimality_gap, 4)
-            if optimality_gap is not None else ""
+            round(ratio_gap, 4)
+            if ratio_gap is not None else ""
         ),
         "status": "SUCCESS"
     })
+
     return results
 
 def run_benchmarks(student_id):
@@ -147,7 +176,6 @@ def run_benchmarks(student_id):
     print(f"Graphs being benchmarked: {len(graph_files)}")
     print(f" {"~" * 15} P1 Benchmarks for {student_id} with time limit of {TIME_LIMIT} {"~" * 15}")
 
-    total_results = []
 
     for index, filepath in enumerate(graph_files, start=1):
         print(f"\nGraph {index}/{len(graph_files)}")
@@ -159,8 +187,6 @@ def run_benchmarks(student_id):
                                     filepath.name,
                                     student_id
         )
-
-        total_results.extend(graph_results)
 
         save_results(graph_results)
 

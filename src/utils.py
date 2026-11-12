@@ -11,7 +11,7 @@ BASE_DIR = Path(__file__).parent.parent
 SAVE_DIR_HANDMADE = BASE_DIR / "data" / "graphs" / "handmade"
 SAVE_DIR_SYNTHETIC = BASE_DIR / "data" / "graphs" / "synthetic"
 
-N_VALUES = range(4, 20)
+N_VALUES = range(4, 42) # 4 -> 42 which is the answer to the Ultimate Question of Life, the Universe, and Everything.
 M_VALUES = [0.125, 0.250, 0.500, 0.750]
 
 ### -------------- handmade graphs ---------------
@@ -110,10 +110,9 @@ def generate_handmade_graphs(handmadeGraphs) -> list[str]:
 
     return paths
 
-def generate_random_graph(n, m, seed) -> str:
+def generate_random_graph(n, m) -> str:
     """Generate a random weighted graph and save it in GraphML format."""
     os.makedirs(SAVE_DIR_SYNTHETIC, exist_ok=True)
-    random.seed(seed)
 
     G = nx.Graph()
     pos = {}
@@ -123,8 +122,8 @@ def generate_random_graph(n, m, seed) -> str:
         if (x, y) not in pos.values():
             new_node = G.number_of_nodes()
             weight = random.randint(1, 100)
-            G.add_node(new_node, weight=weight)
             pos[new_node] = (x, y)
+            G.add_node(new_node, weight=weight, pos=(x, y))
 
     max_edges = (n * (n - 1)) // 2
     num_edges = int(max_edges * m)
@@ -134,7 +133,7 @@ def generate_random_graph(n, m, seed) -> str:
         if not G.has_edge(u, v):
             G.add_edge(u, v)
 
-    filename = f"graph_{n}_{int(m*100)}.graphml"
+    filename = f"graph_{n}_{int(round(m * 1000))}.graphml" # this is to ensure 0.125 -> 125 because it was writing 12 in the previous version
     path = os.path.join(SAVE_DIR_SYNTHETIC, filename)
     save_graph(G, path)
     return path
@@ -154,6 +153,7 @@ if __name__ == "__main__":
     
     args = parser.parse_args()
     student_seed = args.seed
+    random.seed(student_seed)
     gen_handmade = args.handmade
     
     print(f" {'~' * 40} Generating graphs for Seed: {student_seed} {'~' * 40} ")
@@ -165,8 +165,7 @@ if __name__ == "__main__":
             count += 1
 
             # Creating a unique, reproducible seed per graph based on your student ID
-            unique_seed = int(f"{student_seed}{n}{int(m*100)}")
-            path = generate_random_graph(n, m, unique_seed)
+            path = generate_random_graph(n, m)
             print(f"({count}/{total_graphs}) Saved: {path}")
 
     if gen_handmade:
